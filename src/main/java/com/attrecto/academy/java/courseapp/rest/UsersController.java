@@ -68,5 +68,21 @@ public class UsersController {
     public void deleteUser(@PathVariable final Integer id) {
     	userService.deleteUser(id);
     }
+	
+	
+	//Hozz létre egy GET-es végpontot a UsersController osztályban ami user id alapján második
+	//paraméterként URL-ben kap egy stringet
+	//A végpont a következő legyen: /api/users/{id}/{filter}
+	//A kapott string alapján szűrjön a felhasználók nevére úgy hogy a ne tegyen 
+	//különbséget kis és nagybetűk között
+	//A visszadott felhasználókat név és id szerint növekvő sorrendbe rendezze
+	@GetMapping(value= "/{id}/{filter}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Get an user by id", security = {@SecurityRequirement(name = "token")})
+    public List<UserDto> findUsersByNameFilterASCNameASCid(
+    		@PathVariable final Integer id, 
+    		@PathVariable final String filter) {
+    	return userService.findUsersByNameFilterASCNameASCid(id, filter);
+    }
 
 }

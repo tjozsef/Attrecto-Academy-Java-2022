@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import org.webjars.NotFoundException;
 
@@ -46,5 +49,20 @@ public class ServiceUtil {
 
 			return minimalCourseDto;
 		}).collect(Collectors.toList());
+	}
+	//A kapott string alapján szűrjön a felhasználók nevére úgy hogy a ne tegyen 
+	//különbséget kis és nagybetűk között
+	//A visszadott felhasználókat név és id szerint növekvő sorrendbe rendezze
+	public List<User> findUsersByNameFilterASCNameASCid(Integer id, String filter) {
+	    User exampleUser = new User();
+	    exampleUser.setName(filter);
+	    ExampleMatcher caseInsensitiveExampleMatcher = ExampleMatcher
+	    		.matchingAny().withMatcher("name", 
+	    				ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
+	    Example<User> example = Example.of(exampleUser, caseInsensitiveExampleMatcher);
+		final Sort sortingRules = Sort.by(Sort.Direction.ASC,"name")
+				.and(Sort.by(Sort.Direction.ASC,"id"));
+		final List<User> users = userRepository.findAll(example, sortingRules);
+		return users;
 	}
 }

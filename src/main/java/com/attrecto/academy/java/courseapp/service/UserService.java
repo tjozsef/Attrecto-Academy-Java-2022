@@ -107,4 +107,18 @@ public class UserService {
 		
 		userRepository.deleteById(id);
 	}
+
+	public List<UserDto> findUsersByNameFilterASCNameASCid(Integer id, String filter) {
+		List<User> users = serviceUtil.findUsersByNameFilterASCNameASCid(id, filter);
+		List<UserDto> userDtos = users.stream().map(user -> {
+			UserDto userDto = new UserDto();
+			userDto.setId(user.getId());
+			userDto.setName(user.getName());
+			userDto.setEmail(user.getEmail());
+			userDto.setCourses(serviceUtil.listUserCourses(user));
+			return userDto;
+				})
+				.collect(Collectors.toList());
+		return userDtos;
+	}
 }
